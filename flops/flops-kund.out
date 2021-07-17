@@ -1,0 +1,23 @@
+ Intel(R) Atom(TM) CPU  330   @ 1.60GHz (family: 0x6, model: 0x1c, stepping: 0x2)
+
+   FLOPS C Program (Double Precision), V2.0 18 Dec 1992
+
+   Module     Error        RunTime      MFLOPS
+                            (usec)
+     1      2.8461e-13      0.0817    171.4504
+     2      1.1644e-15      0.0565    123.7911
+     3     -3.9883e-15      0.0528    322.1794
+     4      6.0419e-14      0.0541    277.4566
+     5     -4.4266e-14      0.1369    211.7754
+     6      7.7002e-15      0.0961    301.6905
+     7      3.1108e-13      0.1595     75.2130
+     8      2.2839e-14      0.0999    300.3285
+
+   Iterations      =  256000000
+   NullTime (usec) =     0.0000
+   MFLOPS(1)       =   154.9925
+   MFLOPS(2)       =   143.4322
+   MFLOPS(3)       =   214.3955
+   MFLOPS(4)       =   300.4850
+
+
