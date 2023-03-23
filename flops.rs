@@ -1,17 +1,18 @@
-use std::time::{Duration, Instant};
+use std::time::{Instant};
 fn main() {
     println!("\n");
-    println!("   FLOPS Rust Program (double Precision), V0.9 16 Mar 2023");
+    println!("   FLOPS Rust Program (double Precision), V0.91 23 Mar 2023");
     println!("                       Ported From                        ");
     println!("   FLOPS c Program (double Precision), V2.0 18 dec 1992");
-    println!("         by Al Aburto      aburto@marlin.nosc.mil\n\n");
+    println!("         by Al Aburto      aburto@marlin.nosc.mil");
+    println!(" ");
 
     let mut nulltime = 0.0;
     let mut timearray: [f64; 3] = [0.0; 3];
     let mut tlimit = 0.0; /* Threshold to determine Number of    */
     /* Loops to run. Fixed at 15.0 seconds.*/
 
-    let mut T: [f64; 36] = [0.0; 36]; /* Global array used to hold timing    */
+    let mut t: [f64; 36] = [0.0; 36]; /* Global array used to hold timing    */
     /* results and other information.      */
 
     let mut sa = 0.0;
@@ -42,7 +43,7 @@ fn main() {
     let b4 = 0.24801428034e-4;
     let b5 = -0.2754213324e-6;
     let b6 = 0.20189405e-8;
-
+/*
     let c0 = 1.0;
     let c1 = 0.99999999668;
     let c2 = 0.49999995173;
@@ -52,7 +53,7 @@ fn main() {
     let c6 = 0.140836136e-2;
     let c7 = 0.17358267e-3;
     let c8 = 0.3931683e-4;
-
+*/
     let d1 = 0.3999999946405e-1;
     let d2 = 0.96e-3;
     let d3 = 0.1233153e-5;
@@ -68,15 +69,15 @@ fn main() {
 
     let loops = 15625;
     let mut nlimit = 0;
-    
 
-    let mut i = 0;
+
+    let  i = 0;
     let mut m = 0;
     let mut n = 0;
 
     /****************************************************/
     /* Set Variable Values.                             */
-    /* T[1] references all timing results relative to   */
+    /* t[1] references all timing results relative to   */
     /* one million loops.                               */
     /*                                                  */
     /* The program will execute from 31250 to 512000000 */
@@ -87,8 +88,7 @@ fn main() {
     /*                                                  */
     /* No more than nlimit = 512000000 loops are allowed*/
     /****************************************************/
-
-    T[1] = 1.0e+06 / (loops as f64);
+    t[1] = 1.0e+06 / (loops as f64);
     tlimit = 15.0;
     nlimit = 512000000;
 
@@ -100,8 +100,8 @@ fn main() {
     five = 5.0;
     scale = one;
 
-    println!("   Module     error        RunTime      MFLOPS\n");
-    println!("                            (usec)\n");
+    println!("   Module     error        RunTime      MFLOPS");
+    println!("                            (usec)");
 
     /*************************/
     /* Initialize the timer. */
@@ -109,7 +109,7 @@ fn main() {
 
     //   dtime(timearray);
     //   dtime(timearray);
-
+    
     /*******************************************************/
     /* Module 1.  Calculate integral of df(x)/f(x) defined */
     /*            below.  Result is ln(f(1)). There are 14 */
@@ -118,67 +118,73 @@ fn main() {
     /*            in the timing.                           */
     /*            50.0% +, 00.0% -, 42.9% *, and 07.1% /   */
     /*******************************************************/
+
+/*
+MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
+  1        7      0      6      1      14   7.1%  FDIV's
+*/
     n = loops;
     sa = 0.0;
 
+    let start1 = Instant::now();
     while sa < tlimit {
         n = 2 * n;
-        x = one / (n as f64); /*********************/
-        s = 0.0; /*  Loop 1.          */
-        v = 0.0; /*********************/
+        x = one / (n as f64);   /*********************/
+        s = 0.0;                /*  Loop 1.          */
+        v = 0.0;                /*********************/
         w = one;
 
         //     dtime(timearray);
-        for i in 1..n //- 1
-        //= 1 ; i <= n-1 ; i++ )
+        let loop1 = Instant::now();
+        for i in 1..n
         {
             v = v + w;
             u = v * x;
             s = s + (d1 + u * (d2 + u * d3)) / (w + u * (d1 + u * (e2 + u * e3)));
         }
-        //      dtime(timearray);
-        sa = timearray[1];
+        let loop1t = loop1.elapsed();
+        sa = loop1t.as_secs() as f64 +(loop1t.subsec_nanos() as f64)*1e-9;
 
         if n == nlimit {
             break;
         };
-        /* printf(" %10ld  %12.5lf\n",n,sa); */
+//        println!("n = {} time = {}",n,sa);
     }
 
     scale = 1.0e+06 / (n as f64);
-    T[1] = scale;
+    t[1] = scale;
 
     /****************************************/
-    /* Estimate nulltime ('for' loop time). */
-    /****************************************/
+   /* Estimate nulltime ('for' loop time). */
+   /****************************************/
     let start = Instant::now();
     for i in 1..n {}
     let dnulltime = start.elapsed();
-    println!("Time elapsed in expensive_function() is: {:?}", dnulltime);
-    nulltime = T[1] * timearray[1];
+ //   println!("Nulltime is: {:?}", dnulltime);
+    timearray[1]=dnulltime.as_secs() as f64 + (dnulltime.subsec_nanos() as f64)*1e-9;
+    nulltime = t[1] * timearray[1];
     if nulltime < 0.0 {
         nulltime = 0.0;
     }
-    println!("{}", nulltime);
-    T[2] = T[1] * sa - nulltime;
+//    println!("Null time {:?}", dnulltime);
+    let nul = nulltime;
+    t[2] = t[1] * sa - nulltime;
 
     sa = (d1 + d2 + d3) / (one + d1 + e2 + e3);
     sb = d1;
 
-    T[3] = T[2] / 14.0; /*********************/
-    sa = x * (sa + sb + two * s) / two; /* Module 1 Results. */
-    sb = one / sa; /*********************/
+    t[3] = t[2] / 14.0;                      /*********************/
+    sa = x * (sa + sb + two * s) / two;      /* Module 1 Results. */
+    sb = one / sa;                           /*********************/
     n = (((40000 * sb as i64) as f64) / scale) as i64;
     sc = sb - 25.2;
-    T[4] = one / T[3];
+    t[4] = one / t[3];
     /********************/
     /*  DO NOT REMOVE   */
     /*  THIS PRINTOUT!  */
     /********************/
-    //   println!("     1   %13.4le  %10.4lf  %10.4lf\n",sc,T[2],T[4]);
-    println!("     1    {:+.4e} {} {}",sc,T[2],T[4]);
-    let dnulltime = start.elapsed();
-    println!("Time elapsed in expensive_function() is: {:?}", dnulltime);
+    let dnulltime1 = start1.elapsed();
+    println!("     1    {:+.4e}       {:.4}     {:.4}",sc,t[2],t[4]);
 
     m = n;
     /*******************************************************/
@@ -190,30 +196,38 @@ fn main() {
     /*            42.9% +, 28.6% -, 14.3% *, and 14.3% /   */
     /*******************************************************/
 
-
-    let start2 = Instant::now();
+/*
+   MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
+     2        3      2      1      1       7   difficult to vectorize.
+*/
+   let start2 = Instant::now();
     s = -five;                      /********************/
     sa = -one;                      /* Loop 2.          */
                                     /********************/
     //   dtime(TimeArray);
+    let l2m2 = Instant::now();
     for i in 1..m+1 {
         s = -s;
         sa = sa + s;
     }
     //   dtime(TimeArray);
-    T[5] = T[1] * timearray[1];
-    if T[5] < 0.0 {
-        T[5] = 0.0;
+    let elapl2m2 = l2m2.elapsed();
+    timearray[1]=elapl2m2.as_secs() as f64 + (elapl2m2.subsec_nanos() as f64)*1e-9;
+
+    t[5] = t[1] * timearray[1];
+    if t[5] < 0.0 {
+        t[5] = 0.0;
     }
 
     sc = m as f64;
 
-    u = sa; /*********************/
-    v = 0.0; /* Loop 3.           */
-    w = 0.0; /*********************/
+    u = sa;        /*********************/
+    v = 0.0;       /* Loop 3.           */
+    w = 0.0;       /*********************/
     x = 0.0;
 
     //   dtime(TimeArray);
+    let l3m2 = Instant::now();
     for i in 1..m+1 {
         s = -s;
         sa = sa + s;
@@ -223,24 +237,26 @@ fn main() {
         w = w + s / u;
     }
     //   dtime(TimeArray);
-    T[6] = T[1] * timearray[1];
+    let elapl3m2 = l3m2.elapsed();
+    timearray[1]=elapl3m2.as_secs() as f64 + (elapl3m2.subsec_nanos() as f64)*1e-9;
+    t[6] = t[1] * timearray[1];
 
-    T[7] = (T[6] - T[5]) / 7.0; /*********************/
-    m = (sa * x / sc) as i64; /*  PI Results       */
-    sa = four * w / five; /*********************/
+    t[7] = (t[6] - t[5]) / 7.0;  /*********************/
+    m = (sa * x / sc) as i64;    /*  PI Results       */
+    sa = four * w / five;        /*********************/
     sb = sa + five / v;
     sc = 31.25;
     piprg = sb - sc / (v * v * v);
     pierr = piprg - piref;
-    T[8] = one / T[7];
+    t[8] = one / t[7];
     /*********************/
     /*   DO NOT REMOVE   */
     /*   THIS PRINTOUT!  */
     /*********************/
-    //   printf("     2   %13.4le  %10.4lf  %10.4lf\n",pierr,T[6]-T[5],T[8]);
-    println!("     2    {:+.4e} {} {}",pierr,T[2],T[4]);
+    //   printf("     2   %13.4le  %10.4lf  %10.4lf\n",pierr,t[6]-t[5],t[8]);
     let dnulltime2 = start2.elapsed();
-    println!("Time elapsed in expensive_function() is: {:?}", dnulltime2);
+    let elaps2 = dnulltime2.as_secs() as f64 + (dnulltime2.subsec_nanos() as f64)*1.0e-9;
+    println!("     2    {:+.4e}       {:.4}     {:.4}",pierr,t[6]-t[5],t[8]);
 
     /*******************************************************/
     /* Module 3.  Calculate integral of sin(x) from 0.0 to */
@@ -251,11 +267,17 @@ fn main() {
     /*            35.3% +, 11.8% -, 52.9% *, and 00.0% /   */
     /*******************************************************/
 
+/*
+   MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
+     3        6      2      9      0      17   0.0%  FDIV's
+*/
+
     x = piref / (three * (m as f64)); /*********************/
-    s = 0.0; /*  Loop 4.          */
-    v = 0.0; /*********************/
+    s = 0.0;                          /*  Loop 4.          */
+    v = 0.0;                          /*********************/
 
     //   dtime(TimeArray);
+let start3 = Instant::now();
     for i in 1..m //- 1 {
         {
         v = v + one;
@@ -264,67 +286,78 @@ fn main() {
         s = s + u * ((((((a6 * w - a5) * w + a4) * w - a3) * w + a2) * w + a1) * w + one);
     }
     //   dtime(TimeArray);
-    T[9] = T[1] * timearray[1] - nulltime;
+    let dnulltime3 = start3.elapsed();
+    timearray[1] = dnulltime3.as_secs() as f64 + (dnulltime3.subsec_nanos() as f64)*1.0e-9;
+   t[9] = t[1] * timearray[1] - nulltime;
 
     u = piref / three;
     w = u * u;
     sa = u * ((((((a6 * w - a5) * w + a4) * w - a3) * w + a2) * w + a1) * w + one);
 
-    T[10] = T[9] / 17.0; /*********************/
-    sa = x * (sa + two * s) / two; /* sin(x) Results.   */
-    sb = 0.5; /*********************/
+    t[10] = t[9] / 17.0;              /*********************/
+    sa = x * (sa + two * s) / two;    /* sin(x) Results.   */
+    sb = 0.5;                         /*********************/
     sc = sa - sb;
-    T[11] = one / T[10];
+    t[11] = one / t[10];
     /*********************/
     /*   DO NOT REMOVE   */
     /*   THIS PRINTOUT!  */
     /*********************/
-    //   printf("     3   %13.4le  %10.4lf  %10.4lf\n",sc,T[9],T[11]);
-    println!("     3    {:+.4e} {} {}",sc,T[2],T[4]);
+    println!("     3    {:+.4e}       {:.4}     {:.4}",sc,t[9],t[11]);
+
 
     /************************************************************/
     /* Module 4.  Calculate Integral of cos(x) from 0.0 to PI/3 */
     /*            using the Trapazoidal Method. Result is       */
     /*            sin(PI/3). There are 15 double precision      */
     /*            operations per loop (7 +, 0 -, 8 *, and 0 / ) */
+   /*            operations per loop (7 +, 0 -, 8 *, and 0 / ) */
     /*            included in the timing.                       */
     /*            50.0% +, 00.0% -, 50.0% *, 00.0% /            */
     /************************************************************/
+
+/*
+   MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
+     4        7      0      8      0      15   0.0%  FDIV's
+*/
     a3 = -a3;
     a5 = -a5;
     x = piref / (three * (m as f64)); /*********************/
-    s = 0.0; /*  Loop 5.          */
-    v = 0.0; /*********************/
+    s = 0.0;                          /*  Loop 5.          */
+    v = 0.0;                          /*********************/
 
     //   dtime(TimeArray);
+let start4 = Instant::now();
     for i in 1..m //- 1 {
         {
         u = (i as f64) * x;
         w = u * u;
         s = s + w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one;
     }
-    //   dtime(TimeArray);
-    T[12] = T[1] * timearray[1] - nulltime;
+   //   dtime(TimeArray);
+    let dnulltime4 = start4.elapsed();
+    timearray[1]=dnulltime4.as_secs() as f64 + (dnulltime4.subsec_nanos() as f64)*1e-9;
+
+    t[12] = t[1] * timearray[1] - nulltime;
 
     u = piref / three;
     w = u * u;
     sa = w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one;
 
-    T[13] = T[12] / 15.0; /*******************/
-    sa = x * (sa + one + two * s) / two; /* Module 4 Result */
-    u = piref / three; /*******************/
+    t[13] = t[12] / 15.0;                 /*******************/
+    sa = x * (sa + one + two * s) / two;  /* Module 4 Result */
+    u = piref / three;                    /*******************/
     w = u * u;
     sb = u * ((((((a6 * w + a5) * w + a4) * w + a3) * w + a2) * w + a1) * w + a0);
     sc = sa - sb;
-    T[14] = one / T[13];
+    t[14] = one / t[13];
     /*********************/
     /*   DO NOT REMOVE   */
     /*   THIS PRINTOUT!  */
     /*********************/
-    //   printf("     4   %13.4le  %10.4lf  %10.4lf\n",sc,T[12],T[14]);
-    println!("     4    {:+.4e} {} {}",sc,T[2],T[4]);
-
-    /************************************************************/
+    println!("     4    {:+.4e}       {:.4}     {:.4}",sc,t[12],t[14]);
+    
+   /************************************************************/
     /* Module 5.  Calculate Integral of tan(x) from 0.0 to PI/3 */
     /*            using the Trapazoidal Method. Result is       */
     /*            ln(cos(PI/3)). There are 29 double precision  */
@@ -333,19 +366,27 @@ fn main() {
     /*            46.7% +, 00.0% -, 50.0% *, and 03.3% /        */
     /************************************************************/
 
+ /*
+  MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
+     5       13      0     15      1      29   3.4%  FDIV's
+*/
+
     x = piref / (three * (m as f64)); /*********************/
-    s = 0.0; /*  Loop 6.          */
-    v = 0.0; /*********************/
+    s = 0.0;                          /*  Loop 6.          */
+    v = 0.0;                          /*********************/
 
     //   dtime(TimeArray);
-    for i in 1..m { //- 1 {
+    let start5 = Instant::now();
+    for i in 1..m {
         u = (i as f64) * x;
         w = u * u;
         v = u * ((((((a6 * w + a5) * w + a4) * w + a3) * w + a2) * w + a1) * w + one);
         s = s + v / (w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one);
     }
     //   dtime(TimeArray);
-    T[15] = T[1] * timearray[1] - nulltime;
+    let dnulltime5 = start5.elapsed();
+    timearray[1]=dnulltime5.as_secs() as f64 + (dnulltime5.subsec_nanos() as f64)*1e-9;
+    t[15] = t[1] * timearray[1] - nulltime;
 
     u = piref / three;
     w = u * u;
@@ -353,17 +394,16 @@ fn main() {
     sb = w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one;
     sa = sa / sb;
 
-    T[16] = T[15] / 29.0; /*******************/
-    sa = x * (sa + two * s) / two; /* Module 5 Result */
-    sb = 0.6931471805599453; /*******************/
+    t[16] = t[15] / 29.0;           /*******************/
+    sa = x * (sa + two * s)  / two; /* Module 5 Result */
+    sb = 0.6931471805599453;        /*******************/
     sc = sa - sb;
-    T[17] = one / T[16];
+    t[17] = one / t[16];
     /*********************/
-    /*   DO NOT REMOVE   */
+   /*   DO NOT REMOVE   */
     /*   THIS PRINTOUT!  */
     /*********************/
-    //   printf("     5   %13.4le  %10.4lf  %10.4lf\n",sc,T[15],T[17]);
-    println!("     5    {:+.4e} {} {}",sc,T[2],T[4]);
+    println!("     5    {:+.4e}       {:.4}     {:.4}",sc,t[15],t[17]);
 
     /************************************************************/
     /* Module 6.  Calculate Integral of sin(x)*cos(x) from 0.0  */
@@ -374,11 +414,16 @@ fn main() {
     /*            46.7% +, 00.0% -, 53.3% *, and 00.0% /        */
     /************************************************************/
 
-    x = piref / (four * (m as f64)); /*********************/
-    s = 0.0; /*  Loop 7.          */
-    v = 0.0; /*********************/
+/*
+   MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
+     6       13      0     16      0      29   0.0%  FDIV's
+*/
 
+    x = piref / (four * (m as f64)); /*********************/
+    s = 0.0;                         /*  Loop 7.          */
+    v = 0.0;                         /*********************/
     //   dtime(TimeArray);
+let start6 = Instant::now();
     for i in 1..m { //- 1 {
         u = (i as f64) * x;
         w = u * u;
@@ -386,7 +431,9 @@ fn main() {
         s = s + v * (w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one);
     }
     // dtime(TimeArray);
-    T[18] = T[1] * timearray[1] - nulltime;
+     let dnulltime6 = start6.elapsed();
+     timearray[1]=dnulltime6.as_secs() as f64 + (dnulltime6.subsec_nanos() as f64)*1e-9;
+    t[18] = t[1] * timearray[1] - nulltime;
 
     u = piref / four;
     w = u * u;
@@ -394,17 +441,17 @@ fn main() {
     sb = w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one;
     sa = sa * sb;
 
-    T[19] = T[18] / 29.0; /*******************/
+     t[19] = t[18] / 29.0;   /*******************/
     sa = x * (sa + two * s) / two; /* Module 6 Result */
-    sb = 0.25; /*******************/
+    sb = 0.25;              /*******************/
     sc = sa - sb;
-    T[20] = one / T[19];
+    t[20] = one / t[19];
     /*********************/
     /*   DO NOT REMOVE   */
     /*   THIS PRINTOUT!  */
     /*********************/
-    //   printf("     6   %13.4le  %10.4lf  %10.4lf\n",sc,T[18],T[20]);
-    println!("     6    {:+.4e} {} {}",sc,T[2],T[4]);
+
+    println!("     6    {:+.4e}       {:.4}     {:.4}",sc,t[18],t[20]);
 
     /*******************************************************/
     /* Module 7.  Calculate value of the definite integral */
@@ -415,25 +462,31 @@ fn main() {
     /*            are included in the timing.              */
     /*            25.0% +, 25.0% -, 25.0% *, and 25.0% /   */
     /*******************************************************/
-
-    /*********************/
-    s = 0.0; /* Loop 8.           */
-    w = one; /*********************/
+/*
+   MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
+     7        3      3      3      3      12   25.0% FDIV's
+*/
+                           /*********************/
+    s = 0.0;               /* Loop 8.           */
+    w = one;               /*********************/
     sa = 102.3321513995275;
     v = sa / (m as f64);
 
     //   dtime(TimeArray);
+    let start7 = Instant::now();
     for i in 1..m { //- 1 {
         x = (i as f64) * v;
         u = x * x;
         s = s - w / (x + w) - x / (u + w) - u / (x * u + w);
     }
     //   dtime(TimeArray);
-    T[21] = T[1] * timearray[1] - nulltime;
+    let dnulltime7 = start7.elapsed();
+    timearray[1]=dnulltime7.as_secs() as f64 + (dnulltime7.subsec_nanos() as f64)*1e-9;
+    t[21] = t[1] * timearray[1] - nulltime;
     /*********************/
     /* Module 7 Results  */
     /*********************/
-    T[22] = T[21] / 12.0;
+  t[22] = t[21] / 12.0;
     x = sa;
     u = x * x;
     sa = -w - w / (x + w) - x / (u + w) - u / (x * u + w);
@@ -443,13 +496,14 @@ fn main() {
     m = ((m as f64) / scale) as i64;
 
     sc = sa + 500.2;
-    T[23] = one / T[22];
+    t[23] = one / t[22];
     /********************/
     /*  DO NOT REMOVE   */
     /*  THIS PRINTOUT!  */
     /********************/
-    //   printf("     7   %13.4le  %10.4lf  %10.4lf\n",sc,T[21],T[23]);
-    println!("     7    {:+.4e} {} {}",sc,T[2],T[4]);
+
+    println!("     7    {:+.4e}       {:.4}     {:.4}",sc,t[21],t[23]);
+
 
     /************************************************************/
     /* Module 8.  Calculate Integral of sin(x)*cos(x)*cos(x)    */
@@ -460,20 +514,27 @@ fn main() {
     /*               13 +,     0 -,    17 *          0 /        */
     /*            46.7% +, 00.0% -, 53.3% *, and 00.0% /        */
     /************************************************************/
+/*
+   MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
+     8       13      0     17      0      30   0.0%  FDIV's
+*/
 
     x = piref / (three * (m as f64)); /*********************/
-    s = 0.0; /*  Loop 9.          */
-    v = 0.0; /*********************/
+    s = 0.0;                          /*  Loop 9.          */
+    v = 0.0;                          /*********************/
 
     //   dtime(TimeArray);
+let start8 = Instant::now();
     for i in 1..m {//- 1 {
         u = (i as f64) * x;
         w = u * u;
         v = w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one;
         s = s + v * v * u * ((((((a6 * w + a5) * w + a4) * w + a3) * w + a2) * w + a1) * w + one);
-    }
+    }   
     // dtime(TimeArray);
-    T[24] = T[1] * timearray[1] - nulltime;
+    let dnulltime8 = start8.elapsed();
+    timearray[1]=dnulltime8.as_secs() as f64 + (dnulltime8.subsec_nanos() as f64)*1e-9;
+    t[24] = t[1] * timearray[1] - nulltime;
 
     u = piref / three;
     w = u * u;
@@ -481,56 +542,70 @@ fn main() {
     sb = w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one;
     sa = sa * sb * sb;
 
-    T[25] = T[24] / 30.0; /*******************/
+    t[25] = t[24] / 30.0;          /*******************/
     sa = x * (sa + two * s) / two; /* Module 8 Result */
-    sb = 0.29166666666666667; /*******************/
+    sb = 0.29166666666666667;      /*******************/
     sc = sa - sb;
-    T[26] = one / T[25];
+    t[26] = one / t[25];
     /*********************/
     /*   DO NOT REMOVE   */
     /*   THIS PRINTOUT!  */
     /*********************/
-    //   printf("     8   %13.4le  %10.4lf  %10.4lf\n",sc,T[24],T[26]);
-    println!("     8    {:+.4e} {} {}",sc,T[2],T[4]);
 
-    /**************************************************/
+    println!("     8    {:+.4e}       {:.4}     {:.4}",sc,t[24],t[26]);
+
+       /**************************************************/
     /* MFLOPS(1) output. This is the same weighting   */
     /* used for all previous versions of the flops.c  */
     /* program. Includes Modules 2 and 3 only.        */
     /**************************************************/
-    T[27] = (five * (T[6] - T[5]) + T[9]) / 52.0;
-    T[28] = one / T[27];
+    t[27] = (five * (t[6] - t[5]) + t[9]) / 52.0;
+    t[28] = one / t[27];
 
     /**************************************************/
     /* MFLOPS(2) output. This output does not include */
     /* Module 2, but it still does 9.2% FDIV's.       */
     /**************************************************/
-    T[29] = T[2] + T[9] + T[12] + T[15] + T[18];
-    T[29] = (T[29] + four * T[21]) / 152.0;
-    T[30] = one / T[29];
+    t[29] = t[2] + t[9] + t[12] + t[15] + t[18];
+    t[29] = (t[29] + four * t[21]) / 152.0;
+    t[30] = one / t[29];
 
     /**************************************************/
     /* MFLOPS(3) output. This output does not include */
     /* Module 2, but it still does 3.4% FDIV's.       */
     /**************************************************/
-    T[31] = T[2] + T[9] + T[12] + T[15] + T[18];
-    T[31] = (T[31] + T[21] + T[24]) / 146.0;
-    T[32] = one / T[31];
-
+    t[31] = t[2] + t[9] + t[12] + t[15] + t[18];
+    t[31] = (t[31] + t[21] + t[24]) / 146.0;
+    t[32] = one / t[31];
+    
     /**************************************************/
     /* MFLOPS(4) output. This output does not include */
     /* Module 2, and it does NO FDIV's.               */
     /**************************************************/
-    T[33] = (T[9] + T[12] + T[18] + T[24]) / 91.0;
-    T[34] = one / T[33];
+    t[33] = (t[9] + t[12] + t[18] + t[24]) / 91.0;
+    t[34] = one / t[33];
 
     //   printf("\n");
+    println!(" ");
     //   printf("   Iterations      = %10ld\n",m);
+         println!("   Iterations      = {}",m);
     //   printf("   NullTime (usec) = %10.4lf\n",nulltime);
-    //   printf("   MFLOPS(1)       = %10.4lf\n",T[28]);
-    //   printf("   MFLOPS(2)       = %10.4lf\n",T[30]);
-    //   printf("   MFLOPS(3)       = %10.4lf\n",T[32]);
-    //   printf("   MFLOPS(4)       = %10.4lf\n\n",T[34]);
+         println!("   NullTime (usec) = {:.4}",nul*1e6);
+    //   printf("   MFLOPS(1)       = %10.4lf\n",t[28]);
+         println!("   MFLOPS(1)       = {:.4}",t[28]);
+    //   printf("   MFLOPS(2)       = %10.4lf\n",t[30]);
+         println!("   MFLOPS(2)       = {:.4}",t[30]);
+    //   printf("   MFLOPS(3)       = %10.4lf\n",t[32]);
+         println!("   MFLOPS(3)       = {:.4}",t[32]);
+    //   printf("   MFLOPS(4)       = %10.4lf\n\n",t[34]);
+         println!("   MFLOPS(4)       = {:.4}\n",t[34]);
 
     /*********** END ***************/
-}
+
+
+
+
+
+
+    
+
