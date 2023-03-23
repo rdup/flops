@@ -1,0 +1,8 @@
+                  C         rust
+Celeron N2830   2m43,535s 2m57,757s
+ARM hf 32bits   6m14.272s 6m14.647s
+Core2duo T5450  1m42,393s 1m43,748s
+Xeon E5345      1m12,977s 1m13,967s
+ARM hf 32bits   6m14.272s 6m14.647s
+ARM64 RPi3B+    3m59.534s 2m58.295s
+ARM64 Odroid X2 3m6.980s  2m19.030s
