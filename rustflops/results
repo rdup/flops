@@ -1,12 +1,12 @@
-                  C         rust
-Celeron N2830   2m43,535s 2m57,757s
-ARM hf 32bits   6m14.272s 6m14.647s
-Core2duo T5450  1m42,393s 1m43,748s
-Xeon E5345      1m12,977s 1m13,967s
-Xeon E5405      1m8,156s  1m9,532s
-Core i3-4005U   0m59,750s 1m1,646s
-Core i7-2600    0m32,117s 0m32,213s
-Core i7-3770    0m24,931s 0m24,109s
-ARM hf 32bits   6m14.272s 6m14.647s
-ARM64 RPi3B+    3m59.534s 2m58.295s
-ARM64 Odroid X2 3m6.980s  2m19.030s
+                  C         rust        go
+Celeron N2830   2m43,535s 2m57,757s 2m58,307s
+Core2duo T5450  1m42,393s 1m43,748s 1m42,936s
+Core2duo E7400  0m48,508s 0m49,485s 0m48,095s
+Xeon E5345      1m12,977s 1m13,967s 1m13,405s
+Xeon E5405      1m8,156s  1m9,532s  1m7,637s
+Core i3-4005U   0m59,750s 1m1,646s  1m3,772s
+Core i7-2600    0m32,117s 0m32,213s 0m35,326s
+Core i7-3770    0m24,931s 0m24,109s 0m27,427s
+ARM hf 32bits   6m14.272s 6m14.647s 4m52.686s (it=256000000)
+ARM64 RPi3B+    3m59.534s 2m58.295s 3m3.302s
+ARM64 Odroid X2 3m6.980s  2m19.030s 4m41.410s
