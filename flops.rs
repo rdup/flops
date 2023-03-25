@@ -1,32 +1,32 @@
 use std::time::{Instant};
 fn main() {
     println!("\n");
-    println!("   FLOPS Rust Program (double Precision), V0.91 23 Mar 2023");
+    println!("   FLOPS Rust Program (double Precision), V0.95 25 Mar 2023");
     println!("                       Ported From                        ");
     println!("   FLOPS c Program (double Precision), V2.0 18 dec 1992");
     println!("         by Al Aburto      aburto@marlin.nosc.mil");
     println!(" ");
 
-    let mut nulltime = 0.0;
+    let mut nulltime: f64; 
     let mut timearray: [f64; 3] = [0.0; 3];
-    let mut tlimit = 0.0; /* Threshold to determine Number of    */
+    let tlimit: f64; /* Threshold to determine Number of    */
     /* Loops to run. Fixed at 15.0 seconds.*/
 
     let mut t: [f64; 36] = [0.0; 36]; /* Global array used to hold timing    */
     /* results and other information.      */
 
-    let mut sa = 0.0;
-    let mut sb = 0.0;
-    let mut sc = 0.0;
-    let mut one = 1.0;
-    let mut two = 2.0;
-    let mut three = 3.0;
-    let mut four = 4.0;
-    let mut five = 5.0;
-    let mut piref = 0.0;
-    let mut piprg = 0.0;
-    let mut scale = 0.0;
-    let mut pierr = 0.0;
+    let mut sa: f64;
+    let mut sb: f64;
+    let mut sc: f64;
+    let one: f64;  
+    let two: f64;
+    let three: f64;
+    let four: f64;
+    let five: f64;
+    let piref: f64;
+    let piprg: f64;
+    let scale: f64;
+    let pierr: f64;
 
     let a0 = 1.0;
     let a1 = -0.1666666666671334;
@@ -36,7 +36,7 @@ fn main() {
     let mut a5 = 0.2507059876207e-7;
     let a6 = 0.164105986683e-9;
 
-    let b0 = 1.0;
+//    let b0 = 1.0;
     let b1 = -0.4999999999982;
     let b2 = 0.4166666664651e-1;
     let b3 = -0.1388888805755e-2;
@@ -62,18 +62,16 @@ fn main() {
     let e3 = 0.411051e-6;
 
     let mut s = 0.0;
-    let mut u = 0.0;
-    let mut v = 0.0;
-    let mut w = 0.0;
+    let mut u: f64;
+    let mut v: f64;
+    let mut w: f64; 
     let mut x = 0.0;
 
     let loops = 15625;
-    let mut nlimit = 0;
-
-
-    let  i = 0;
-    let mut m = 0;
-    let mut n = 0;
+    let nlimit: i64;
+//  let  i: i64;
+    let mut m: i64;
+    let mut n: i64;
 
     /****************************************************/
     /* Set Variable Values.                             */
@@ -88,6 +86,7 @@ fn main() {
     /*                                                  */
     /* No more than nlimit = 512000000 loops are allowed*/
     /****************************************************/
+
     t[1] = 1.0e+06 / (loops as f64);
     tlimit = 15.0;
     nlimit = 512000000;
@@ -98,7 +97,7 @@ fn main() {
     three = 3.0;
     four = 4.0;
     five = 5.0;
-    scale = one;
+    //scale = one;
 
     println!("   Module     error        RunTime      MFLOPS");
     println!("                            (usec)");
@@ -107,9 +106,7 @@ fn main() {
     /* Initialize the timer. */
     /*************************/
 
-    //   dtime(timearray);
-    //   dtime(timearray);
-    
+
     /*******************************************************/
     /* Module 1.  Calculate integral of df(x)/f(x) defined */
     /*            below.  Result is ln(f(1)). There are 14 */
@@ -126,7 +123,6 @@ MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
     n = loops;
     sa = 0.0;
 
-    let start1 = Instant::now();
     while sa < tlimit {
         n = 2 * n;
         x = one / (n as f64);   /*********************/
@@ -134,15 +130,14 @@ MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
         v = 0.0;                /*********************/
         w = one;
 
-        //     dtime(timearray);
         let loop1 = Instant::now();
-        for i in 1..n
+        for _i in 1..n 
         {
             v = v + w;
             u = v * x;
             s = s + (d1 + u * (d2 + u * d3)) / (w + u * (d1 + u * (e2 + u * e3)));
         }
-        let loop1t = loop1.elapsed();
+        let loop1t = loop1.elapsed();  
         sa = loop1t.as_secs() as f64 +(loop1t.subsec_nanos() as f64)*1e-9;
 
         if n == nlimit {
@@ -155,12 +150,11 @@ MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
     t[1] = scale;
 
     /****************************************/
-   /* Estimate nulltime ('for' loop time). */
-   /****************************************/
+    /* Estimate nulltime ('for' loop time). */
+    /****************************************/
     let start = Instant::now();
-    for i in 1..n {}
+    for _i in 1..n {}
     let dnulltime = start.elapsed();
- //   println!("Nulltime is: {:?}", dnulltime);
     timearray[1]=dnulltime.as_secs() as f64 + (dnulltime.subsec_nanos() as f64)*1e-9;
     nulltime = t[1] * timearray[1];
     if nulltime < 0.0 {
@@ -183,7 +177,6 @@ MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
     /*  DO NOT REMOVE   */
     /*  THIS PRINTOUT!  */
     /********************/
-    let dnulltime1 = start1.elapsed();
     println!("     1    {:+.4e}       {:.4}     {:.4}",sc,t[2],t[4]);
 
     m = n;
@@ -200,20 +193,18 @@ MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
    MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
      2        3      2      1      1       7   difficult to vectorize.
 */
-   let start2 = Instant::now();
+
     s = -five;                      /********************/
     sa = -one;                      /* Loop 2.          */
                                     /********************/
-    //   dtime(TimeArray);
     let l2m2 = Instant::now();
-    for i in 1..m+1 {
+    for _i in 1..m+1 {
         s = -s;
         sa = sa + s;
     }
-    //   dtime(TimeArray);
     let elapl2m2 = l2m2.elapsed();
     timearray[1]=elapl2m2.as_secs() as f64 + (elapl2m2.subsec_nanos() as f64)*1e-9;
-
+ 
     t[5] = t[1] * timearray[1];
     if t[5] < 0.0 {
         t[5] = 0.0;
@@ -226,9 +217,8 @@ MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
     w = 0.0;       /*********************/
     x = 0.0;
 
-    //   dtime(TimeArray);
     let l3m2 = Instant::now();
-    for i in 1..m+1 {
+    for _i in 1..m+1 {
         s = -s;
         sa = sa + s;
         u = u + two;
@@ -236,7 +226,6 @@ MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
         v = v - s * u;
         w = w + s / u;
     }
-    //   dtime(TimeArray);
     let elapl3m2 = l3m2.elapsed();
     timearray[1]=elapl3m2.as_secs() as f64 + (elapl3m2.subsec_nanos() as f64)*1e-9;
     t[6] = t[1] * timearray[1];
@@ -254,8 +243,6 @@ MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
     /*   THIS PRINTOUT!  */
     /*********************/
     //   printf("     2   %13.4le  %10.4lf  %10.4lf\n",pierr,t[6]-t[5],t[8]);
-    let dnulltime2 = start2.elapsed();
-    let elaps2 = dnulltime2.as_secs() as f64 + (dnulltime2.subsec_nanos() as f64)*1.0e-9;
     println!("     2    {:+.4e}       {:.4}     {:.4}",pierr,t[6]-t[5],t[8]);
 
     /*******************************************************/
@@ -276,19 +263,17 @@ MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
     s = 0.0;                          /*  Loop 4.          */
     v = 0.0;                          /*********************/
 
-    //   dtime(TimeArray);
 let start3 = Instant::now();
-    for i in 1..m //- 1 {
+    for _i in 1..m 
         {
         v = v + one;
         u = v * x;
         w = u * u;
         s = s + u * ((((((a6 * w - a5) * w + a4) * w - a3) * w + a2) * w + a1) * w + one);
     }
-    //   dtime(TimeArray);
-    let dnulltime3 = start3.elapsed();
+let dnulltime3 = start3.elapsed();
     timearray[1] = dnulltime3.as_secs() as f64 + (dnulltime3.subsec_nanos() as f64)*1.0e-9;
-   t[9] = t[1] * timearray[1] - nulltime;
+    t[9] = t[1] * timearray[1] - nulltime;
 
     u = piref / three;
     w = u * u;
@@ -311,7 +296,6 @@ let start3 = Instant::now();
     /*            using the Trapazoidal Method. Result is       */
     /*            sin(PI/3). There are 15 double precision      */
     /*            operations per loop (7 +, 0 -, 8 *, and 0 / ) */
-   /*            operations per loop (7 +, 0 -, 8 *, and 0 / ) */
     /*            included in the timing.                       */
     /*            50.0% +, 00.0% -, 50.0% *, 00.0% /            */
     /************************************************************/
@@ -324,17 +308,15 @@ let start3 = Instant::now();
     a5 = -a5;
     x = piref / (three * (m as f64)); /*********************/
     s = 0.0;                          /*  Loop 5.          */
-    v = 0.0;                          /*********************/
+    //v = 0.0;                          /*********************/
 
-    //   dtime(TimeArray);
-let start4 = Instant::now();
-    for i in 1..m //- 1 {
+    let start4 = Instant::now();
+    for i in 1..m 
         {
         u = (i as f64) * x;
         w = u * u;
         s = s + w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one;
     }
-   //   dtime(TimeArray);
     let dnulltime4 = start4.elapsed();
     timearray[1]=dnulltime4.as_secs() as f64 + (dnulltime4.subsec_nanos() as f64)*1e-9;
 
@@ -356,8 +338,8 @@ let start4 = Instant::now();
     /*   THIS PRINTOUT!  */
     /*********************/
     println!("     4    {:+.4e}       {:.4}     {:.4}",sc,t[12],t[14]);
-    
-   /************************************************************/
+
+    /************************************************************/
     /* Module 5.  Calculate Integral of tan(x) from 0.0 to PI/3 */
     /*            using the Trapazoidal Method. Result is       */
     /*            ln(cos(PI/3)). There are 29 double precision  */
@@ -373,17 +355,15 @@ let start4 = Instant::now();
 
     x = piref / (three * (m as f64)); /*********************/
     s = 0.0;                          /*  Loop 6.          */
-    v = 0.0;                          /*********************/
+    //v = 0.0;                          /*********************/
 
-    //   dtime(TimeArray);
-    let start5 = Instant::now();
-    for i in 1..m {
+let start5 = Instant::now();
+    for i in 1..m { 
         u = (i as f64) * x;
         w = u * u;
         v = u * ((((((a6 * w + a5) * w + a4) * w + a3) * w + a2) * w + a1) * w + one);
         s = s + v / (w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one);
     }
-    //   dtime(TimeArray);
     let dnulltime5 = start5.elapsed();
     timearray[1]=dnulltime5.as_secs() as f64 + (dnulltime5.subsec_nanos() as f64)*1e-9;
     t[15] = t[1] * timearray[1] - nulltime;
@@ -400,7 +380,7 @@ let start4 = Instant::now();
     sc = sa - sb;
     t[17] = one / t[16];
     /*********************/
-   /*   DO NOT REMOVE   */
+    /*   DO NOT REMOVE   */
     /*   THIS PRINTOUT!  */
     /*********************/
     println!("     5    {:+.4e}       {:.4}     {:.4}",sc,t[15],t[17]);
@@ -421,8 +401,8 @@ let start4 = Instant::now();
 
     x = piref / (four * (m as f64)); /*********************/
     s = 0.0;                         /*  Loop 7.          */
-    v = 0.0;                         /*********************/
-    //   dtime(TimeArray);
+//    v = 0.0;                         /*********************/
+
 let start6 = Instant::now();
     for i in 1..m { //- 1 {
         u = (i as f64) * x;
@@ -430,7 +410,6 @@ let start6 = Instant::now();
         v = u * ((((((a6 * w + a5) * w + a4) * w + a3) * w + a2) * w + a1) * w + one);
         s = s + v * (w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one);
     }
-    // dtime(TimeArray);
      let dnulltime6 = start6.elapsed();
      timearray[1]=dnulltime6.as_secs() as f64 + (dnulltime6.subsec_nanos() as f64)*1e-9;
     t[18] = t[1] * timearray[1] - nulltime;
@@ -441,7 +420,7 @@ let start6 = Instant::now();
     sb = w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one;
     sa = sa * sb;
 
-     t[19] = t[18] / 29.0;   /*******************/
+    t[19] = t[18] / 29.0;   /*******************/
     sa = x * (sa + two * s) / two; /* Module 6 Result */
     sb = 0.25;              /*******************/
     sc = sa - sb;
@@ -472,21 +451,19 @@ let start6 = Instant::now();
     sa = 102.3321513995275;
     v = sa / (m as f64);
 
-    //   dtime(TimeArray);
     let start7 = Instant::now();
     for i in 1..m { //- 1 {
         x = (i as f64) * v;
         u = x * x;
         s = s - w / (x + w) - x / (u + w) - u / (x * u + w);
     }
-    //   dtime(TimeArray);
     let dnulltime7 = start7.elapsed();
     timearray[1]=dnulltime7.as_secs() as f64 + (dnulltime7.subsec_nanos() as f64)*1e-9;
     t[21] = t[1] * timearray[1] - nulltime;
     /*********************/
     /* Module 7 Results  */
     /*********************/
-  t[22] = t[21] / 12.0;
+    t[22] = t[21] / 12.0;
     x = sa;
     u = x * x;
     sa = -w - w / (x + w) - x / (u + w) - u / (x * u + w);
@@ -521,17 +498,15 @@ let start6 = Instant::now();
 
     x = piref / (three * (m as f64)); /*********************/
     s = 0.0;                          /*  Loop 9.          */
-    v = 0.0;                          /*********************/
+    //v = 0.0;                          /*********************/
 
-    //   dtime(TimeArray);
 let start8 = Instant::now();
     for i in 1..m {//- 1 {
         u = (i as f64) * x;
         w = u * u;
         v = w * (w * (w * (w * (w * (b6 * w + b5) + b4) + b3) + b2) + b1) + one;
         s = s + v * v * u * ((((((a6 * w + a5) * w + a4) * w + a3) * w + a2) * w + a1) * w + one);
-    }   
-    // dtime(TimeArray);
+    }
     let dnulltime8 = start8.elapsed();
     timearray[1]=dnulltime8.as_secs() as f64 + (dnulltime8.subsec_nanos() as f64)*1e-9;
     t[24] = t[1] * timearray[1] - nulltime;
@@ -554,7 +529,7 @@ let start8 = Instant::now();
 
     println!("     8    {:+.4e}       {:.4}     {:.4}",sc,t[24],t[26]);
 
-       /**************************************************/
+    /**************************************************/
     /* MFLOPS(1) output. This is the same weighting   */
     /* used for all previous versions of the flops.c  */
     /* program. Includes Modules 2 and 3 only.        */
@@ -577,7 +552,7 @@ let start8 = Instant::now();
     t[31] = t[2] + t[9] + t[12] + t[15] + t[18];
     t[31] = (t[31] + t[21] + t[24]) / 146.0;
     t[32] = one / t[31];
-    
+
     /**************************************************/
     /* MFLOPS(4) output. This output does not include */
     /* Module 2, and it does NO FDIV's.               */
@@ -601,11 +576,4 @@ let start8 = Instant::now();
          println!("   MFLOPS(4)       = {:.4}\n",t[34]);
 
     /*********** END ***************/
-
-
-
-
-
-
-    
-
+}
