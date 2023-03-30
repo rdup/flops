@@ -1,0 +1,23 @@
+   FLOPS Rust Program (double Precision), V0.91 23 Mar 2023
+                       Ported From                        
+   FLOPS c Program (double Precision), V2.0 18 dec 1992
+         by Al Aburto      aburto@marlin.nosc.mil
+ 
+   Module     error        RunTime      MFLOPS
+                            (usec)
+     1    +4.0146e-13       0.0058     2410.8524
+     2    -1.4166e-13       0.0048     1467.4812
+     3    +4.7184e-14       0.0036     4660.0003
+     4    -1.2557e-13       0.0034     4423.4905
+     5    -1.3800e-13       0.0066     4396.2104
+     6    +3.2380e-13       0.0065     4475.9008
+     7    -8.4583e-11       0.0174     688.6814
+     8    +3.4867e-13       0.0071     4209.6360
+ 
+   Iterations      = 512000000
+   NullTime (usec) = 0.0001
+   MFLOPS(1)       = 1891.0150
+   MFLOPS(2)       = 1589.6211
+   MFLOPS(3)       = 2892.6372
+   MFLOPS(4)       = 4407.9099
+
