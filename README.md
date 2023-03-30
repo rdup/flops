@@ -48,7 +48,9 @@ A collection of flops benchmarks results, for personal and historical use, only
    given below for each module executed:
 
    MODULE   FADD   FSUB   FMUL   FDIV   TOTAL  Comment
+   
      1        7      0      6      1      14   7.1%  FDIV's
+     
      2        3      2      1      1       7   difficult to vectorize.
      3        6      2      9      0      17   0.0%  FDIV's
      4        7      0      8      0      15   0.0%  FDIV's
