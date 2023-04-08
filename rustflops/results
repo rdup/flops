@@ -1,5 +1,5 @@
-                  C         rust        go
-Atom N270 32bits 3m13,440s 3m26,476s 7m3,975s  (It=256000000)             
+                  C         rust        go       icx 
+Atom N270 32bits 3m13,440s 3m26,476s 7m3,975s  2m50,551s             (It=256000000,512000000 )             
 Celeron N2830    2m43,535s 2m57,757s 2m58,307s
 Core2duo T5450   1m42,393s 1m43,748s 1m42,936s
 Core2duo E7400   0m48,508s 0m49,485s 0m48,095s
