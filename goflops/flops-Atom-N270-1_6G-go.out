@@ -1,0 +1,26 @@
+  FLOPS Go Program (double Precision), V0.9 25 Mar 2023
+                       Ported From                        
+   FLOPS c Program (double Precision), V2.0 18 dec 1992
+         by Al Aburto      aburto@marlin.nosc.mil
+ 
+   Module     error        RunTime      MFLOPS
+                            (usec)
+     1    -7.6739e-13       0.0887     157.8553
+     2    -5.7021e-13       0.0889     78.7081     
+     3    -2.4314e-14       0.0840     202.3827      
+     4    +6.8501e-14       0.1672     89.6933      
+     5    -1.6320e-14       0.2095     138.4068     
+     6    +1.3961e-13       0.2246     129.1257     
+     7    -3.6152e-11       0.2184     54.9479     
+     8    +9.0483e-15       0.2268     132.2716     
+ 
+   Iterations      =  256000000
+   NullTime (usec) = 151994
+   MFLOPS(1)       = 98.3581
+   MFLOPS(2)       = 92.2557
+   MFLOPS(3)       = 119.7473
+   MFLOPS(4)       = 129.5135
+
+real	7m4,813s
+user	7m3,975s
+sys	0m0,835s
