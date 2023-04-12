@@ -1,0 +1,26 @@
+
+   FLOPS C Program (Double Precision), V2.0 18 Dec 1992
+  modified for Intel(R) oneAPI DPC++/C++ Compiler 2023.1.0 
+
+   Module     Error        RunTime      MFLOPS
+                            (usec)
+     1      4.0146e-13      0.0100   1395.3941
+     2     -1.4166e-13      0.0085    820.7994
+     3      4.7184e-14      0.0113   1505.3789
+     4     -1.2568e-13      0.0087   1733.4383
+     5     -1.3800e-13      0.0171   1696.7153
+     6      3.2380e-13      0.0167   1740.9175
+     7     -6.5654e-11      0.0307    390.7570
+     8      3.4867e-13      0.0171   1758.8977
+
+   Iterations      =  512000000
+   NullTime (usec) =     0.0000
+   MFLOPS(1)       =   964.1379
+   MFLOPS(2)       =   814.7190
+   MFLOPS(3)       =  1309.4798
+   MFLOPS(4)       =  1695.8572
+
+real	1m8,145s
+user	1m8,108s
+sys	0m0,000s
+
