@@ -1,0 +1,25 @@
+   FLOPS C Program (Double Precision), V2.0 18 Dec 1992
+
+   Module     Error        RunTime      MFLOPS
+                            (usec)
+     1      4.0146e-13      0.0364    384.5293
+     2     -1.4166e-13      0.0152    459.5994
+     3      4.7184e-14      0.0404    420.8500
+     4     -1.2546e-13      0.0404    371.3896
+     5     -1.3800e-13      0.0237   1224.9692
+     6      3.2380e-13      0.0175   1652.5791
+     7     -8.4583e-11      0.0483    248.2394
+     8      3.4861e-13      0.0192   1562.0567
+
+   Iterations      =  512000000
+   NullTime (usec) =     0.0000
+   MFLOPS(1)       =   446.1692
+   MFLOPS(2)       =   432.0937
+   MFLOPS(3)       =   646.1329
+   MFLOPS(4)       =   774.2238
+
+
+real	2m25,025s
+user	2m24,991s
+sys	0m0,016s
+vazquez@orangepizero3:~/flops$ 
